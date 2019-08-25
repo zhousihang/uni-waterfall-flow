@@ -1,6 +1,7 @@
 .DS_Store
-node_modules
-unpackage
+node_modules/
+unpackage/
+dist/
 
 # local env files
 .env.local
@@ -12,6 +13,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Editor directories and files
+.project
 .idea
 .vscode
 *.suo
