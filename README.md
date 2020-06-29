@@ -1,12 +1,10 @@
 # 基于 uni-app 实现的瀑布流组件
-
-对于 image 组件里的 widthFix 模式，会有一个再次加载的问题，会使标签的高度获取不精准，使定位出现偏差。
-
-如果想使用 widthFix 这个模式，最好是后台在回数据的时候，也把图片的尺寸加上，然后通过 :style 给上高度。
+如果固定好图片尺寸的话，就可以把 setTimeout 时间调掉，setTimeout 延迟时间是兼容页面渲染太卡，导致的定位不准问题。
+或者图片 mode 不要使用 widthFix，定时器是针对图片 mode="widthFix" 尺寸改变时的延迟。
 
 ## 兼容平台
 
-H5、APP、小程序。
+H5、APP、小程序（测试了微信小程序）
 
 # @click 事件
 
@@ -16,7 +14,7 @@ H5、APP、小程序。
 
 <template>
     <view class="app">
-        <waterfall-flow :list="list" :loading="loading" @click="choose"></waterfall-flow>
+        <waterfall-flow :list="list" @click="choose"></waterfall-flow>
     </view>
 </template>
 
@@ -24,25 +22,26 @@ H5、APP、小程序。
 
 <script>
 	// 瀑布流组件
-	import WaterfallFlow from '../../components/nairenk-waterfall-flow/nairenk-waterfall-flow.vue';
+	import WaterfallFlow from '@/components/nairenk-waterfall-flow/nairenk-waterfall-flow.vue';
 	// 模拟 JSON 数据
 	const data = require('@/common/json/data.json');
 	export default {
+		components: {
+			WaterfallFlow
+		},
 		data() {
 			return {
 				page: 1,
 				start: 0,
 				end: 0,
 				list: [], // 列表
-				loading: true
 			}
 		},
 		onLoad() {
 			this.getList();
-		}, 
+		},
 		onReachBottom() {
 			this.page++;
-			this.loading = true;
 			this.getList();
 		},
 		methods: {
@@ -54,26 +53,19 @@ H5、APP、小程序。
 			// 模拟加载数据
 			getList() {
 				if (this.list.length < data.list.length) {
+					uni.showLoading({
+						title: '加载中...'
+					})
 					setTimeout(() => {
 						this.end = this.page * 10;
 						this.list = this.list.concat(data.list.slice(this.start, this.end));
 						this.start = this.end;
-						// 延迟 120 毫秒隐藏加载动画，为了跟组件里面的 100 毫秒定位有个平缓过度
-						setTimeout(() => {
-							this.loading = false;
-						}, 120);
+						uni.hideLoading();
 					}, 1000)
-				} else {
-					this.loading = false;
 				}
 			}
-		},
-		components: {
-			WaterfallFlow
 		}
 	}
 </script>
 ```
-
-注 ：如果出现页面错乱，不要使用 widthFix 模式。
 

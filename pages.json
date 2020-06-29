@@ -1,9 +1,9 @@
 {
-	"pages": [
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "适配H5、APP、小程序-瀑布流"
+				"navigationBarTitleText": "H5、APP、小程序 - 瀑布流"
 			}
 		}
 	],
